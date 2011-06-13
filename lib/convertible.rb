@@ -1,1 +1,4 @@
-require "newgem/awesome"
+require "convertible/version"
+
+module Convertible
+end
