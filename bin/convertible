@@ -36,7 +36,7 @@ convert pdf to plain text using both STDIN/STDOUT:
 convertible -i pdf -o txt < document.pdf > document.txt
 
 
-To query supported conversions of to check wether a given conversion is possible, use the 
+To query supported conversions or to check wether a given conversion is possible, use the 
 -s switch together with a given input filename or format (-i) and an optional output filename / format:
 
 show all supported conversions:
