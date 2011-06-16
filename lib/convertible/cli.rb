@@ -3,7 +3,8 @@ require 'convertible/mime_types'
 
 module Convertible
   class Cli
-    def initialize(input, output = nil, options = {})
+    def initialize(key, input, output = nil, options = {})
+      @key = key
       @input = input
       @output = output
       @options = options

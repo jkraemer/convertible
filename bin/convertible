@@ -2,10 +2,12 @@
 
 require 'optparse'
 require 'convertible/cli'
+require 'yaml'
 require 'pp'
 
 @options = { :debug => false }
 @max_file_args = 2
+@config = File.expand_path '~/.convertible'
 
 OptionParser.new do |optparser|
   optparser.banner = <<-HELP
@@ -77,9 +79,13 @@ HELP
     @max_file_args -= 1
   end
 
+  optparser.on('-a', '--api-key=KEY', "use the given API key (will be stored in #{@config} for future use)") do |arg|
+    @api_key = arg
+  end
+
   files = optparser.permute!(ARGV)
   (puts optparser; exit(1)) unless files.size <= @max_file_args
-  
+
   @out ||= files.pop || 'STDOUT'
   @in = files.pop || 'STDIN'
   STDERR.puts "#{@in} => #{@out}\n#{@options.inspect}" if @options[:debug]
@@ -87,8 +93,20 @@ HELP
   @command ||= :convert
 end
 
+if @api_key
+  (File.open(@config, 'w') << {:key => @api_key}.to_yaml).close
+elsif File.readable?(@config)
+  @api_key = YAML.load(File.read(@config))[:key] rescue nil
+end
+
+if @api_key.nil?
+  puts "Please use the -a option to set your API key."
+  puts optparser
+  exit(1)
+end
+
 begin
-  Convertible::Cli.new(@in, @out, @options).send @command
+  Convertible::Cli.new(@api_key, @in, @out, @options).send @command
 rescue ArgumentError
   STDERR.puts $!
   exit 1
