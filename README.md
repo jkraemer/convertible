@@ -21,6 +21,9 @@ options to override. When using STDIN and/or STDOUT you have to use one or both 
 to specify the format of the data. To specify a file format, use the well known file name postfix
 (i.e. pdf for PDF documents) or the official mime type string like application/pdf.
 
+When passing an URL as input file the convertible.io service will attempt to load the input data
+directly from there.
+
 convert pdf to plain text:
 convertible document.pdf document.txt
 
@@ -32,6 +35,9 @@ convertible -c -o txt document.pdf > document.txt
 
 convert pdf to plain text using both STDIN/STDOUT:
 convertible -i pdf -o txt < document.pdf > document.txt
+
+scale down flickr image to 700x700px with cropping and write it to image.jpg:
+convertible --width=700 --height=700 --crop http://farm7.static.flickr.com/6123/5994459827_ba62c5a5bb_b_d.jpg image.jpg
 
 
 # Querying supported conversions

@@ -11,12 +11,19 @@ module Convertible
     end
 
     def convert
-      unless @input == 'STDIN' || File.readable?(@input)
-        raise ArgumentError, "cannot open #{@input} for reading"
+      data = case @input
+      when 'STDIN'
+        $stdin.read
+      when /^https?:\/\//
+        URI.parse @input
+      else
+        File.read(@input) if File.readable?(@input)
       end
-      check_mimetypes
+      raise ArgumentError, "cannot open #{@input} for reading" unless data
+
+      check_mimetypes !(URI === data)
       $stderr.puts "converting #{@input} to #{@output} with options #{@options.inspect}" if @options[:debug]
-      data = @input == 'STDIN' ? $stdin.read : File.read(@input)
+      
       response = client.convert data, @input_type, @output_type, @options
       if @output == 'STDOUT'
         $stdout << response

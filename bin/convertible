@@ -83,6 +83,17 @@ HELP
     @api_key = arg
   end
 
+  optparser.on(nil, '--width=WIDTH', "Image scaling: output width") do |arg|
+    @options[:width] = arg.to_i
+  end
+  optparser.on(nil, '--height=HEIGHT', "Image scaling: output height") do |arg|
+    @options[:height] = arg.to_i
+  end
+  optparser.on(nil, '--crop', "Image scaling: crop image to fit desired output dimensions") do
+    @options[:crop] = true
+  end
+
+
   files = optparser.permute!(ARGV)
   (puts optparser; exit(1)) unless files.size <= @max_file_args
 
